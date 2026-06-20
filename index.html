@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>저기, 황제 안 하실래요? F - 캐릭터챗 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 고풍스러운 다크 퍼플 + 골드 테마 */
+        :root {
+            --bg-color: #301934; 
+            --card-bg: #1a0d1c; 
+            --card-hover: #45244b; 
+            --text-color: #e6dfcc;
+            --accent-color: #cda434; 
+            --border-color: #583260; 
+            --gold-border: #8b7355; 
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Nanum Myeongjo', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            
+            /* 비잔틴 모자이크 패턴 */
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(205, 164, 52, 0.15) 2px, transparent 3px),
+                linear-gradient(45deg, rgba(205, 164, 52, 0.05) 25%, transparent 25%, transparent 75%, rgba(205, 164, 52, 0.05) 75%),
+                linear-gradient(-45deg, rgba(205, 164, 52, 0.05) 25%, transparent 25%, transparent 75%, rgba(205, 164, 52, 0.05) 75%);
+            background-size: 20px 20px, 40px 40px, 40px 40px;
+            background-attachment: fixed;
+        }
+
+        header {
+            background-color: rgba(26, 13, 28, 0.9); 
+            padding: 1rem 0;
+            text-align: center;
+            border-bottom: 2px solid var(--gold-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 15px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+
+        nav button.active {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        nav button:hover {
+            color: var(--accent-color);
+            text-shadow: 0 0 8px rgba(205, 164, 52, 0.4);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 2rem 1.5rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .group-title {
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .group-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        /* 추가됨: 가문 설명을 위한 스타일 */
+        .group-desc {
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-left: 3px solid var(--accent-color);
+            border-radius: 0 4px 4px 0;
+            word-break: keep-all;
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .char-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .char-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .char-card:hover {
+            background-color: var(--card-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+            border-color: var(--gold-border);
+        }
+
+        .char-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            object-fit: cover;
+            background-color: #1a0d1c;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .char-info {
+            margin-left: 15px;
+        }
+
+        .char-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            color: #fff;
+        }
+
+        .char-short {
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            margin: 0;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 2px solid var(--gold-border);
+            border-radius: 4px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 50vh; 
+            overflow-y: auto;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-track { background: var(--bg-color); border-radius: 4px; }
+        .modal-content::-webkit-scrollbar-thumb { background: var(--gold-border); border-radius: 4px; }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-img-large {
+            width: 140px;
+            height: 140px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--gold-border);
+            padding: 4px;
+            background-color: var(--bg-color);
+        }
+
+        .modal-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
+        .modal-short { color: var(--accent-color); font-weight: bold; font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .modal-desc { 
+            font-size: 1rem; 
+            color: var(--text-color); 
+            line-height: 1.8; 
+            text-align: left; 
+            word-break: keep-all;
+            background: rgba(0, 0, 0, 0.3); 
+            padding: 20px; 
+            border-radius: 4px; 
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .term-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 2px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .term-card:hover {
+            background-color: var(--card-hover);
+        }
+
+        .term-name { color: var(--accent-color); font-size: 1.3rem; font-weight: 800; margin-top: 0; margin-bottom: 10px; }
+        .term-desc { color: var(--text-color); line-height: 1.7; margin-bottom: 0; word-break: keep-all;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <button class="active" onclick="switchTab('characters')">인물</button>
+            <button onclick="switchTab('regions')">지역</button>
+            <button onclick="switchTab('terms')">용어</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="characters" class="section active">
+            
+            <h2 class="group-title">두카스 가문</h2>
+            <p class="group-desc">황실에 버금가는 명망을 자랑하는 명문 귀족 가문. 913년 황위 찬탈 실패 이후 정치적 영향력은 크게 약화되었으나, 두카스라는 이름이 지닌 권위는 여전히 건재하다.</p>
+            <div id="chars-doukas" class="char-grid"></div>
+
+            <h2 class="group-title">마케도니아 가문</h2>
+            <p class="group-desc">비잔티움 제국을 통치하는 현 황실. 황제 바실리오스 2세는 귀족 세력을 억제하고 황권 강화를 추진하고 있으나, 동방의 강대한 군벌 귀족들과 대립하고 있다.</p>
+            <div id="chars-macedon" class="char-grid"></div>
+
+            <h2 class="group-title">포카스 가문</h2>
+            <p class="group-desc">동방 최대의 군벌 귀족 가문. 카파도키아와 하르시아논, 안티오키아 일대를 기반으로 막대한 군사력과 장군들을 거느리고 있다. 스클리로스 가문과 오랜 경쟁 관계에 있으며, 현재 동방군의 실권을 장악하고 있다.</p>
+            <div id="chars-phokas" class="char-grid"></div>
+
+            <h2 class="group-title">스클리로스 가문</h2>
+            <p class="group-desc">정치력과 인맥으로 성장한 동방의 명문 군벌 가문. 아나톨리콘과 아르메니아콘을 기반으로 포카스 가문과 패권을 다투어 왔다. 가주 바르다스 스클리로스의 반란 실패로 세력이 약화되었지만, 여전히 무시할 수 없는 영향력을 보유하고 있다.</p>
+            <div id="chars-skleros" class="char-grid"></div>
+            
+            <h2 class="group-title">말레이노스 가문</h2>
+            <p class="group-desc">광대한 영지와 막대한 재산을 보유한 제국 최고의 부호 가문. 군사력 또한 상당하지만, 직접 권력 다툼에 뛰어들기보다 재력과 영향력을 활용하는 경우가 많다. 귀족 사회의 균형을 좌우할 수 있는 잠재적 강자다.</p>
+            <div id="chars-maleinos" class="char-grid"></div>
+
+        </section>
+
+        <section id="regions" class="section">
+            <h2 class="group-title">주요 지역</h2>
+            <div id="regions-container"></div>
+        </section>
+
+        <section id="terms" class="section">
+            <div id="terms-container"></div>
+        </section>
+    </main>
+
+    <div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <img id="modal-img" class="modal-img-large" src="" alt="캐릭터 이미지">
+            <div id="modal-name" class="modal-name">이름</div>
+            <div id="modal-short" class="modal-short">1줄 설명</div>
+            <div id="modal-desc" class="modal-desc">상세 설명</div>
+        </div>
+    </div>
+
+    <script>
+        const noImgUrl = 'https://via.placeholder.com/150/1a0d1c/cda434?text=無';
+
+        // ------------------ [인물 데이터] ------------------
+        const characters = [
+            // 마케도니아 황가
+            { id: 'B2', name: '바실리오스 2세', group: 'macedon', img: noImgUrl, 
+              short: '비잔티움 제국의 정황제', 
+              desc: '27세. 마케도니아 왕조의 정황제로, 귀족 세력을 억누르고 황권 강화를 꾀하는 젊은 군주.<br><br>어린 시절부터 공동황제로 즉위했으나 오랫동안 대신들에게 둘러싸인 채 실권을 행사하지 못했다. 이제는 제국 곳곳에 뿌리내린 대귀족들의 특권을 정면으로 겨누며 자신의 시대를 열고자 한다. 985년 현재, 반란을 일으킨 스클리로스 세력을 꺾고 새로운 위협으로 떠오른 포카스 가문을 경계하고 있다.' },
+            { id: 'C8', name: '콘스탄티노스 8세', group: 'macedon', img: noImgUrl, 
+              short: '비잔티움 제국의 공동황제', 
+              desc: '25세. 바실리오스 2세의 친동생이자 비잔티움 제국의 공동황제.<br><br>형과 함께 황제의 자리에 올랐으나 정치와 군사보다는 궁정 생활과 사교를 즐기는 것으로 알려져 있다. 황실 혈통이라는 막강한 권위를 지녔지만 국정 전반은 대부분 형에게 맡기고 있다. 985년 현재, 제국의 격변 속에서도 형의 가장 가까운 혈육이자 잠재적인 후계자로 남아 있다.' },
+
+            // 포카스 가문 (조에, 이레네 포함)
+            { id: 'BP', name: '바르다스 포카스', group: 'phokas', img: noImgUrl, 
+              short: '포카스 가문의 수장', 
+              desc: '55세. 제국 최고의 명장으로 손꼽히는 동방군 총사령관이자 포카스 가문의 수장.<br><br>황제보다 더 큰 명성을 누린 장군 가문의 적통으로, 수많은 전장에서 승리를 거두며 군부의 지지를 모았다. 과거 스클리로스의 반란을 진압하며 황실의 충신으로 활약했으나 그 세력이 지나치게 강대해졌다. 985년 현재, 황제와 귀족들이 가장 주의 깊게 바라보는 인물 중 하나다.' },
+            { id: 'NP', name: '니키포로스 포카스', group: 'phokas', img: noImgUrl, 
+              short: '포카스 가문의 후계자', 
+              desc: '30세. 바르다스 포카스의 장남이자 포카스 가문의 후계자.<br><br>전설적인 황제이자 명장인 종조부 니키포로스 2세의 이름을 물려받은 귀족 청년이다. 뛰어난 혈통과 가문의 위세에 강한 자부심을 품고 있으며, 누구보다도 포카스의 영광을 당연하게 여긴다. 985년 현재, 차기 가주로서 동방 귀족들의 기대를 한 몸에 받고 있다.' },
+            { id: 'LP', name: '레온 포카스', group: 'phokas', img: noImgUrl, 
+              short: '바르다스 포카스의 차남', 
+              desc: '27세. 포카스 가문의 차남.<br><br>형 니키포로스와는 다른 부드러운 매력으로 사람들을 사로잡는다. 사교적인 성격과 뛰어난 처세술 덕분에 귀족 사회에서 폭넓은 인맥을 쌓고 있다. 겉으로는 친절하고 여유로운 청년처럼 보이지만 필요할 때는 누구보다 영리하게 움직인다. 985년 현재, 형의 그림자에 가려져 있으나 결코 만만히 볼 수 없는 인물이다.' },
+            { id: 'IR', name: '이레네', group: 'phokas', img: noImgUrl, 
+              short: '포카스 가문의 하녀', 
+              desc: '23세. 포카스 가문에 소속된 하녀로 알려져 있으나, 실제로는 전투와 경호에 특화된 충직한 수행원.<br><br>어린 시절 전쟁고아가 되었으나 바르다스 포카스에게 거두어져 성장했다. 냉정한 판단력과 철저한 경계심으로 주군을 그림자처럼 보좌한다. 985년 현재, 포카스 가문의 안전을 책임지는 보이지 않는 방패다.' },
+            { id: 'ZO', name: '조에', group: 'phokas', img: noImgUrl, 
+              short: '포카스 가문의 하녀', 
+              desc: '23세. 이레네의 쌍둥이 동생이자 포카스 가문의 하녀.<br><br>언니보다 감정을 잘 드러내고 행동이 빠르지만, 위기의 순간에는 누구보다 믿음직한 모습을 보인다. 전쟁고아 출신이라는 과거를 공유하며 포카스 가문에 깊은 충성을 바치고 있다. 985년 현재, 언니와 함께 주군을 지키는 충직한 호위자다.' },
+
+            // 스클리로스 가문 (칼리 포함)
+            { id: 'BS', name: '바르다스 스클리로스', group: 'skleros', img: noImgUrl, 
+              short: '스클리로스 가문의 수장', 
+              desc: '61세. 한때 제국 최강의 장군으로 군림했던 스클리로스 가문의 수장.<br><br>황제의 실정과 귀족들의 불만을 등에 업고 반란을 일으켜 제위를 노렸으나 끝내 실패했다. 패배 후 동방으로 도주해 바그다드에 머무르고 있으며, 여전히 자신의 복귀를 꿈꾸고 있다. 985년 현재, 비잔티움 정계를 뒤흔들 수 있는 가장 위험한 망명 귀족으로 평가받는다.' },
+            { id: 'RS', name: '로마노스 스클리로스', group: 'skleros', img: noImgUrl, 
+              short: '스클리로스 가문의 후계자', 
+              desc: '34세. 스클리로스 가문의 후계자로, 몰락한 가문의 재건을 짊어진 인물.<br><br>무력보다는 관찰과 계산을 선호하며, 섣불리 움직이기보다 상황을 읽는 데 능하다. 반란 실패 이후 가문의 위상이 크게 추락했지만 그는 아직 포기를 모른다. 985년 현재, 아버지의 귀환과 스클리로스의 부흥을 위해 조용히 기회를 엿보고 있다.' },
+            { id: 'KL', name: '칼리', group: 'skleros', img: noImgUrl, 
+              short: '스클리로스 가문의 하녀장', 
+              desc: '35세. 스클리로스 가문의 하녀장이자 실질적인 살림 책임자.<br><br>엄격하고 빈틈없는 성격으로 가문 내부를 질서정연하게 유지한다. 반란 실패 이후 혼란에 빠진 가문을 묵묵히 지탱하며 충성을 다하고 있다. 985년 현재, 몰락한 스클리로스 가문의 마지막 기둥 중 하나로 평가받는다.' },
+
+            // 말레이노스 가문
+            { id: 'EM1', name: '에브스타티오스 말레이노스', group: 'maleinos', img: noImgUrl, 
+              short: '말레이노스 가문의 수장', 
+              desc: '47세. 아나톨리아의 거대한 영지를 보유한 말레이노스 가문의 수장.<br><br>엄격한 품성과 강한 책임감으로 가문과 영지를 다스리는 전형적인 대귀족이다. 황실과 귀족 세력 사이에서 신중하게 균형을 유지하며 가문의 번영을 우선시한다. 985년 현재, 포카스와 스클리로스 사이의 대립 속에서 자신의 영향력을 지키고자 한다.' },
+            { id: 'EM2', name: '에브도키모스 말레이노스', group: 'maleinos', img: noImgUrl, 
+              short: '말레이노스 가문의 후계자', 
+              desc: '21세. 말레이노스 가문의 젊은 후계자.<br><br>예민하고 내성적인 성격 탓에 화려한 귀족 사회보다는 자신의 생각에 잠겨 있는 경우가 많다. 엄격한 아버지의 기대에 부응하고 싶어 하지만 쉽사리 인정받지 못하고 있다. 985년 현재, 가문의 미래를 짊어질 후계자로서 성장의 기로에 서 있다.' }
+        ];
+
+        // ------------------ [지역 데이터] ------------------
+        const regionsData = [
+            { name: '트라키아', desc: '제국의 수도 콘스탄티노폴리스를 품은 비잔티움의 중심지. 비옥한 평야와 보스포러스 해협을 기반으로 정치·경제·종교의 모든 권력이 집중되어 있다. 황실 직할지인 만큼 황제의 영향력이 가장 강하게 미치는 지역이다. 제국의 모든 귀족과 야심가들이 시선을 향하는 권력의 심장부.' },
+            { name: '카파도키아', desc: '기암괴석과 황량한 고원이 펼쳐진 아나톨리아 내륙의 군사적 요충지. 수많은 명장과 병사를 배출한 지역으로, 포카스 가문의 세력 기반 가운데 하나이다. 그리스계와 아르메니아계 귀족들이 오랫동안 공존하며 독특한 문화를 형성했다. 동방 귀족 세력의 핵심 거점.' },
+            { name: '하르시아논', desc: '험준한 산악과 고원 지대로 이루어진 동방 변경 지역. 외적의 침입을 막아내는 방패 역할을 수행하며 강인한 군인들을 길러냈다. 포카스 가문이 오랜 세월 영향력을 행사해 온 영지이기도 하다. 동방군의 충성파들이 많이 자리한 지역으로 알려져 있다.' },
+            { name: '안티오키아 & 킬리키아', desc: '제국과 이슬람 세계가 맞닿는 국경 지대. 풍요로운 해안 평야와 험준한 타우루스 산맥이 공존하며, 다양한 문화와 민족이 뒤섞여 살아간다. 무역과 군사의 가치가 모두 높은 만큼 전략적 중요성이 매우 크다. 포카스 가문의 영향력이 깊게 뿌리내린 동방의 관문이다.' },
+            { name: '아나톨리콘', desc: '광대한 내륙 평원과 고원을 포함하는 아나톨리아의 중심 지역. 제국 최대 규모의 군관구 중 하나로, 오랫동안 유력 귀족 가문들의 기반이 되어 왔다. 스클리로스 가문 역시 이곳을 바탕으로 강력한 세력을 구축했다. 985년 현재, 반란의 상흔이 아직 남아 있는 긴장된 땅이다.' },
+            { name: '아르메니아콘', desc: '흑해 연안과 험준한 산맥을 품은 북동부 변경 지역. 아르메니아 문화의 영향이 강하며 수많은 국경 전사들을 배출해 왔다. 전략적 가치가 높아 황실과 귀족들의 관심이 끊이지 않는다. 스클리로스 가문의 전통적인 영향권.' },
+            { name: '옵시키온 & 부켈라리온', desc: '비옥한 평야와 풍부한 농업 생산력을 자랑하는 서부 아나톨리아 지역. 제국에서도 손꼽히는 부유한 토지들이 밀집해 있으며, 막대한 세수를 창출한다. 말레이노스 가문은 이 지역의 광대한 영지를 바탕으로 막대한 부를 축적했다.' }
+        ];
+
+        // ------------------ [용어 데이터 (카테고리 분류)] ------------------
+        const termsData = [
+            { 
+                category: '용어', 
+                items: [
+                    { name: '오이코스', desc: '콘스탄티노폴리스에 자리한 귀족들의 도시 저택. 단순한 거주지를 넘어 가문의 위세를 과시하고 정치적 영향력을 행사하는 본거지 역할을 한다. 귀족들은 이곳에서 연회와 회담을 열며 인맥을 관리하고 정보를 수집한다.' }
+                ]
+            },
+            { 
+                category: '콘스탄티노폴리스 주요 장소', 
+                items: [
+                    { name: '대궁전', desc: '비잔티움 황제의 공식 거처이자 제국 통치의 중심지. 수많은 전각과 정원, 행정 시설이 연결된 거대한 궁전 단지로 이루어져 있다. 황제의 허가 없이는 핵심 구역에 접근조차 어렵다. 제국의 모든 명령이 이곳에서 내려진다.' },
+                    { name: '크리소트리클리노스', desc: '황제의 공식 알현이 이루어지는 황금 알현실. 외국 사절과 귀족들은 이곳에서 황제의 위엄을 직접 마주하게 된다. 화려한 장식과 엄격한 의례는 제국의 권위를 상징한다. 비잔티움 권력의 정점이라 불리는 공간.' },
+                    { name: '마그나우라 궁전', desc: '학문과 외교의 중심지로 기능하는 궁전. 정교한 자동 기계와 화려한 장식들은 외국 사절들에게 깊은 인상을 남긴다. 제국의 부와 기술력을 과시하기 위한 대표적인 공간으로 알려져 있다. 비잔티움 문명의 우수성을 상징하는 장소.' },
+                    { name: '하기아 소피아', desc: '제국 최대의 성당이자 정교회의 정신적 중심지. 황금빛 모자이크와 거대한 돔은 방문객들에게 경외감을 안겨 준다. 황제의 대관식과 국가적 의식 역시 이곳에서 거행된다. 황제의 권위와 신의 축복을 연결하는 성스러운 공간.' },					
+                    { name: '히포드롬', desc: '수만 명의 관중을 수용하는 거대한 전차 경기장. 경기뿐 아니라 개선식, 공개 처형, 정치적 선전 행사도 개최된다. 민중의 여론이 가장 직접적으로 드러나는 장소이기도 하다.' },
+                    { name: '메세 대로', desc: '콘스탄티노폴리스를 가로지르는 제국의 중심 대로. 상인과 순례자, 귀족과 병사들이 끊임없이 오가는 도시의 동맥 역할을 한다. 개선식 행렬과 국가 행사가 이 길을 따라 진행된다.' }
+                ]
+            }
+        ];
+
+        // ------------------ [데이터 렌더링] ------------------
+        window.onload = () => {
+            // 1. 인물 렌더링
+            characters.forEach((char, index) => {
+                const cardHTML = `
+                    <div class="char-card" onclick="openModal(${index})">
+                        <img src="${char.img}" alt="${char.name}" class="char-img">
+                        <div class="char-info">
+                            <h3 class="char-name">${char.name}</h3>
+                            <p class="char-short">${char.short}</p>
+                        </div>
+                    </div>
+                `;
+                
+                if(char.group === 'macedon') document.getElementById('chars-macedon').innerHTML += cardHTML;
+                else if(char.group === 'phokas') document.getElementById('chars-phokas').innerHTML += cardHTML;
+                else if(char.group === 'skleros') document.getElementById('chars-skleros').innerHTML += cardHTML;
+                else if(char.group === 'maleinos') document.getElementById('chars-maleinos').innerHTML += cardHTML;
+            });
+
+            // 2. 지역 렌더링
+            const regionsContainer = document.getElementById('regions-container');
+            regionsData.forEach(region => {
+                regionsContainer.innerHTML += `
+                    <div class="term-card">
+                        <h3 class="term-name">${region.name}</h3>
+                        <p class="term-desc">${region.desc}</p>
+                    </div>
+                `;
+            });
+
+            // 3. 용어 렌더링 (카테고리별)
+            const termsContainer = document.getElementById('terms-container');
+            termsData.forEach(group => {
+                termsContainer.innerHTML += `<h2 class="group-title">${group.category}</h2>`;
+                group.items.forEach(term => {
+                    termsContainer.innerHTML += `
+                        <div class="term-card">
+                            <h3 class="term-name">${term.name}</h3>
+                            <p class="term-desc">${term.desc}</p>
+                        </div>
+                    `;
+                });
+            });
+        };
+
+        // ------------------ [동작 로직] ------------------
+        function switchTab(tabId) {
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal(index) {
+            const char = characters[index];
+            document.getElementById('modal-img').src = char.img;
+            document.getElementById('modal-name').textContent = char.name;
+            document.getElementById('modal-short').textContent = char.short;
+            document.getElementById('modal-desc').innerHTML = char.desc;
+            
+            document.querySelector('.modal-content').scrollTop = 0;
+            
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if(event.target.id === 'modal-overlay') {
+                document.getElementById('modal-overlay').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
